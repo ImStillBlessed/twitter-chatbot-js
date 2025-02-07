@@ -8,9 +8,9 @@ This application is a Twitter chatbot built using Node.js, EJS for frontend rend
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Database Schema](#database-schema)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [Database Schema](#database-schema)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -60,13 +60,6 @@ This application is a Twitter chatbot built using Node.js, EJS for frontend rend
     DB_USER=[your_mysql_user]
     DB_PASSWORD=[your_mysql_password]
     DB_NAME=[your_mysql_database_name]
-
-    # Twitter API Credentials (replace with your actual keys)
-    TWITTER_CONSUMER_KEY=[your_twitter_consumer_key]
-    TWITTER_CONSUMER_SECRET=[your_twitter_consumer_secret]
-
-    # Groq API Key
-    GROQ_API_KEY=[your_groq_api_key]
     PORT=[port_number] //optional if not provided defaults to 3001
     CRYPTO_SECRET=[32 character secret key for encryption]
     ```
@@ -74,40 +67,6 @@ This application is a Twitter chatbot built using Node.js, EJS for frontend rend
 2. **MySQL Database:**
 
     Create a MySQL database with the name specified in the `.env` file (`DB_NAME`).  The application will create the necessary tables automatically on the first run.  The database schema is described in the [Database Schema](#database-schema) section.
-
-## Usage
-
-1. **Run the application:**
-
-    ```bash
-    npm start
-    ```
-
-2. **Access the application:**
-
-    Open your web browser and go to `http://localhost:[port]` (default port is 3001, or the port you specified in `.env`).
-
-3. **Setup:**
-    - Navigate to the `/setup` route to enter and save your Twitter API credentials and Groq API key.  These keys are encrypted before being stored in the database.
-4. **Home Page:**
-    - The home page displays the welcome message and lists the available (partially masked) API keys.
-    - Enter keywords in the input field.
-    - Click "Generate from Tweet" to generate a tweet based on recent tweets in your timeline that match the keywords.
-    - Click "AI Generate from keywords" to generate a tweet using the AI model based on the keywords.
-    - The generated tweet will be displayed.
-    - Click "Post Tweet" to post the generated tweet to Twitter.
-
-## API Endpoints
-
-- **GET `/`:**  Renders the home page, fetches user data (including partially masked keys), and makes it available to the EJS template.
-- **GET `/setup`:** renders the setup page for inputting api keys
-- **POST `/setup/save`:** Handles saving the setup configuration (api keys) to the database after encryption.
-- **GET `/api/setup`:** Renders the `save_credentials` page.
-- **GET `/api/edit_credentials`:** Retrieves the user's encrypted API keys.
-- **POST `/api/edit_credentials`:** Handles editing and saving updated API keys.
-- **POST `/api/get_tweet`:** Generates a tweet by searching the user timeline for a matching tweet based on the keywords in the request body.
-- **POST `/api/post_tweet`:** Posts a tweet to Twitter. The tweet text is in the request body.
-- **POST `/api/ai-response`:** Generates an AI-powered tweet using the Groq SDK. The keywords are in the request body.
 
 ## Database Schema
 
@@ -204,6 +163,40 @@ ALTER TABLE users
   MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 ```
+
+## Usage
+
+1. **Run the application:**
+
+    ```bash
+    npm start
+    ```
+
+2. **Access the application:**
+
+    Open your web browser and go to `http://localhost:[port]` (default port is 3001, or the port you specified in `.env`).
+
+3. **Setup:**
+    - Navigate to the `/setup` route to enter and save your Twitter API credentials and Groq API key.  These keys are encrypted before being stored in the database.
+4. **Home Page:**
+    - The home page displays the welcome message and lists the available (partially masked) API keys.
+    - Enter keywords in the input field.
+    - Click "Generate from Tweet" to generate a tweet based on recent tweets in your timeline that match the keywords.
+    - Click "AI Generate from keywords" to generate a tweet using the AI model based on the keywords.
+    - The generated tweet will be displayed.
+    - Click "Post Tweet" to post the generated tweet to Twitter.
+
+## API Endpoints
+
+- **GET `/`:**  Renders the home page, fetches user data (including partially masked keys), and makes it available to the EJS template.
+- **GET `/setup`:** renders the setup page for inputting api keys
+- **POST `/setup/save`:** Handles saving the setup configuration (api keys) to the database after encryption.
+- **GET `/api/setup`:** Renders the `save_credentials` page.
+- **GET `/api/edit_credentials`:** Retrieves the user's encrypted API keys.
+- **POST `/api/edit_credentials`:** Handles editing and saving updated API keys.
+- **POST `/api/get_tweet`:** Generates a tweet by searching the user timeline for a matching tweet based on the keywords in the request body.
+- **POST `/api/post_tweet`:** Posts a tweet to Twitter. The tweet text is in the request body.
+- **POST `/api/ai-response`:** Generates an AI-powered tweet using the Groq SDK. The keywords are in the request body.
 
 ## Contributing
 
