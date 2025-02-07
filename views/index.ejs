@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Twitter Chatbot</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-100 h-screen">
+    <div class="bg-gray-800">
+        <header class=" flex items-center justify-between w-full px-10 py-5 text-white max-w-[1800px] mx-auto">
+            <a href="/" class="">
+                <h1 class=" font-bold text-2xl">X chat-bot</h1>
+            </a>
+            <a href="/setup"
+                class="text-white text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
+                Setup account
+            </a>
+        </header>
+    </div>
+    <div class="bg-white shadow-lg">
+        <nav class="flex items-center justify-between w-full px-10 py-3 mb-4 max-w-[1800px] mx-auto">
+            <h1 class="font-bold">Home</h1>
+            <div class="flex items-center gap-2">
+                <p class="font-semibold">Home</p>>
+            </div>
+        </nav>
+    </div>
+    <div class="px-10 flex items-center justify-center">
+        <main
+            class="max-w-[1080px] w-full p-8 grid grid-cols-2 gap-6 items-center justify-center bg-white rounded-sm shadow-lg">
+            <h1 class="text-3xl font-bold col-span-2 w-full text-center">Welcome, <%= user.name %>
+            </h1>
+
+            <div class="border p-4 rounded-sm">
+                <h2 class="text-lg font-bold text-center mb-6">Available Keys:</h2>
+                <ul class="flex flex-col gap-4 mb-6">
+                    <li class="flex items-center justify-between px-6 gap-6">
+                        <label for="twitter_api_key">twitter_api_key</label>
+                        <%- user.twitter_api_key ? '✓' : '✗' %>
+                    </li>
+                    <li class="flex items-center justify-between px-6 gap-6">
+                        <label for="twitter_api_secret">twitter_api_secret</label>
+                        <%- user.twitter_api_secret ? '✓' : '✗' %>
+                    </li>
+                    <li class="flex items-center justify-between px-6 gap-6">
+                        <label for="twitter_access_token">twitter_access_token</label>
+                        <%- user.twitter_access_token ? '✓' : '✗' %>
+                    </li>
+                    <li class="flex items-center justify-between px-6 gap-6">
+                        <label for="twitter_access_secret">twitter_access_secret</label>
+                        <%- user.twitter_access_secret ? '✓' : '✗' %>
+                    </li>
+                    <li class="flex items-center justify-between px-6 gap-6">
+                        <label for="twitter_bearer_token">twitter_bearer_token</label>
+                        <%- user.twitter_bearer_token ? '✓' : '✗' %>
+                    </li>
+                    <li class="flex items-center justify-between px-6 gap-6">
+                        <label for="groq_api_key">groq_api_key</label>
+                        <%- user.groq_api_key ? '✓' : '✗' %>
+                    </li>
+                </ul>
+                <a href="/api/edit_credentials"
+                    class="text-white text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2 mx-auto">
+                    Edit API keys</a>
+            </div>
+
+            <div class="flex flex-col gap-6 w-full">
+                <form action="/api/get_tweet" method="post">
+                    <div class="flex items-center justify-between w-full gap-3">
+                        <!-- <label for="keywords">Keywords:</label> -->
+                        <input disabled class="p-2 w-full border rounded-sm" type="text" id="keywords" name="keywords"
+                            placeholder="Enter keywords (comma-separated)" required>
+                        <button type="submit" disabled
+                            class="text-white text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
+                            Scan Timeline</button>
+                    </div>
+                </form>
+
+                <form action="/api/ai-response" method="post">
+                    <div class="flex items-center justify-between w-full gap-3">
+                        <!-- <label for="keywords">Keywords:</label> -->
+                        <input class="p-2 w-full border rounded-sm" type="text" id="keywords" name="keywords"
+                            placeholder="Enter keywords (comma-separated)" required>
+                        <button type="submit"
+                            class="text-white text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
+                            Generate from keywords</button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+
+    <script src="/script.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+{
+    "name": "twitter-chatbot-js",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ImStillBlessed/twitter-chatbot-js.git"
+    },
+    "author": "Oigbochie Blessed <eprince1800@gmail.com>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ImStillBlessed/twitter-chatbot-js/issues"
+    },
+    "homepage": "https://github.com/ImStillBlessed/twitter-chatbot-js#readme",
+    "description": "",
+    "dependencies": {
+        "body-parser": "^1.20.3",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.4.7",
+        "ejs": "^3.1.10",
+        "express": "^4.21.2",
+        "groq-sdk": "^0.15.0",
+        "mysql": "^2.18.1",
+        "nodemon": "^3.1.9",
+        "twitter-api-v2": "^1.19.1"
+    },
+    "settings": {
+        "package.json": {
+            "type": "module"
+        }
+    }
+}

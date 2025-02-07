@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Twitter Chatbot</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-100 h-screen">
+    <div class="bg-gray-800">
+        <header class=" flex items-center justify-between w-full px-10 py-5 text-white max-w-[1800px] mx-auto">
+            <a href="/" class="">
+                <h1 class=" font-bold text-2xl">X chat-bot</h1>
+            </a>
+            <a href="/setup"
+                class="text-white text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
+                Setup account
+            </a>
+        </header>
+    </div>
+    <div class="bg-white shadow-lg">
+        <nav class="flex items-center justify-between w-full px-10 py-3 mb-4 max-w-[1800px] mx-auto">
+            <h1 class="font-bold">Tweet</h1>
+            <div class="flex items-center gap-2 font-semibold">
+                <a href="/">Home</a>>
+                <a href="#">Tweet</a>
+            </div>
+        </nav>
+    </div>
+    <div class="px-10 flex items-center justify-center">
+        <main
+            class="max-w-[1080px] w-full p-8 flex flex-col gap-6 items-center justify-center bg-white rounded-sm shadow-lg">
+            <div class="shadow-md rounded-sm p-4 flex flex-col gap-4 w-full">
+                <div class="flex justify-between items-center mb-2">
+                    <h1 class="text-lg font-bold">Generated Tweet</h1>
+
+                </div>
+                <form action="/api/post_tweet" method="post">
+                    <textarea class="border p-4 rounded-sm w-full min-h-[120px] resize" name="tweet" id="tweetContent"
+                        maxlength="280"><%= tweet %></textarea>
+                    <button
+                        class="text-white w-fit text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">Post
+                        Tweet</button>
+                </form>
+            </div>
+            <form action="/api/ai-response" method="post">
+                <div class="flex items-center justify-center w-full gap-3">
+                    <input class="p-2 w-[100%] border rounded-sm" type="text" value="<%= keywords %>" id="keywords"
+                        name="keywords" placeholder="Enter keywords (comma-separated)">
+                    <button
+                        class="flex items-center justify-evenly gap-2 text-nowrap text-center font-semibold shadow-md border rounded-sm bg-gray-300 hover:bg-gray-400 cursor-pointer px-4 py-2">
+                        Regenerate response
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <path
+                                d="M19 4v2.339A9 9 0 0 0 3 12h2a6.987 6.987 0 0 1 12.725-4H15v2h6V4zM12 19a6.957 6.957 0 0 1-5.726-3H9v-2H3v6h2v-2.339A9 9 0 0 0 21 12h-2a7.009 7.009 0 0 1-7 7z" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+        </main>
+    </div>
+
+
+    <script src="/script.js"></script>
+
+
+</body>
+
+</html>
