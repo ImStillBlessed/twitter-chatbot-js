@@ -101,7 +101,7 @@ export const scanTimeline = async (user, keywords) => {
                             ); // Use customPrompt
                             console.log(`AI Response: ${aiResponse}`);
                             // post to twitter
-                            // await postToTwitter(
+                            // await postTweet(
                             //     client,
                             //     aiResponse,
                             //     tweet.id_str
@@ -113,7 +113,10 @@ export const scanTimeline = async (user, keywords) => {
 
                 if (!matchFound) {
                     // Only if no match was found for *any* keyword
-                    const defaultResponse = generateDefaultResponse();
+                    const defaultResponse = generateDefaultResponse(
+                        user,
+                        keywords
+                    );
                     console.log(`Default Response: ${defaultResponse}`);
                     // await postToTwitter(client, defaultResponse, tweet.id_str); // Post default response
                     return defaultResponse; // Return the default response
