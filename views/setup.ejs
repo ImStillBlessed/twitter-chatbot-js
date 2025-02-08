@@ -1,81 +1,58 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Twitter Chatbot</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-</head>
-
-<body class="bg-gray-100 h-screen">
-    <div class="bg-gray-800">
-        <header class=" flex items-center justify-between w-full px-10 py-5 text-white max-w-[1800px] mx-auto">
-            <a href="/" class="">
-                <h1 class=" font-bold text-2xl">X chat-bot</h1>
-            </a>
-            <a href="/setup"
-                class="text-white text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
-                Setup account
-            </a>
-        </header>
-    </div>
-    <div class="bg-white shadow-lg">
-        <nav class="flex items-center justify-between w-full px-10 py-3 mb-4 max-w-[1800px] mx-auto">
-            <h1 class="font-bold">Account Setup</h1>
-            <div class="flex items-center gap-2 font-semibold">
-                <a href="/">Home</a>>
-                <a href="#">Setup</a>
-            </div>
-        </nav>
-    </div>
-    <div class="px-10 flex items-center justify-center">
-        <main
-            class="max-w-[1080px] w-full p-8 flex flex-col gap-6 items-center justify-center bg-white rounded-sm shadow-lg">
-            <form action="/setup/save" method="post">
-                <div class="border p-4 rounded-sm flex flex-col w-full items-center justify-center gap-4">
-                    <h2 class="text-lg font-bold text-center ">Setup your account</h2>
-                    <div class="w-full flex items-center justify-between mx-auto gap-4">
-                        <label for="name">Name:</label>
-                        <input class="border rounded-sm p-1 w-full" type="text" value="<%= user ? user.name : '' %>"
-                            name="name" placeholder="full name" id="name" required>
-                    </div>
-                    <div class="w-full flex items-center justify-between mx-auto gap-4">
-                        <label for="email">Email: </label>
-                        <input class="border rounded-sm p-1 w-full" type="email" value="<%= user ? user.email : '' %>"
-                            placeholder="email@mail.com" name="email" id="email" required>
-                    </div>
-
-                    <div class="flex items-center justify-end gap-4 w-full">
-                        <label for="model">Select default model:</label>
-                        <select class="shadow-lg rounde-sm p-2" name="model" id="models" required>
-                            <% models.forEach((model)=> { %>
-                                <option key="<%= model.id %>" value="<%=model.id %>" <% if (model.id==1) {selected=true}
-                                    %>>
-                                    <%= model.model_name %>
-                                </option>
-                                <% }) %>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col items-start justify-center gap-2 w-full">
-                        <label for="default_prompt">Default prompt:</label>
-                        <textarea class="border p-4 rounded-sm w-full min-h-[120px] resize" name="prompt"
-                            id="tweetContent" maxlength="280" required><%= user.default_prompt %></textarea>
-                    </div>
-
-                    <button type="submit"
-                        class="text-white text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
-                        Save credentials</button>
+<%- include('partials/header') %>
+    <%- include('partials/error') %>
+        <div class="bg-white shadow-lg">
+            <nav class="flex items-center justify-between w-full px-10 py-3 mb-4 max-w-[1800px] mx-auto">
+                <h1 class="font-bold">Account Setup</h1>
+                <div class="flex items-center gap-2 font-semibold">
+                    <a href="/">Home</a>>
+                    <a href="#">Setup</a>
                 </div>
-            </form>
+            </nav>
+        </div>
+        <div class="px-10 flex items-center justify-center">
+            <main
+                class="max-w-[1080px] w-full p-8 flex flex-col gap-6 items-center justify-center bg-white rounded-sm shadow-lg">
+                <form action="/setup/save" method="post">
+                    <div class="border p-4 rounded-sm flex flex-col w-full items-center justify-center gap-4">
+                        <h2 class="text-lg font-bold text-center ">Setup your account</h2>
+                        <div class="w-full flex items-center justify-between mx-auto gap-4">
+                            <label for="name">Name:</label>
+                            <input class="border rounded-sm p-1 w-full" type="text" value="<%= user ? user.name : '' %>"
+                                name="name" placeholder="full name" id="name" required>
+                        </div>
 
-            <a href="/api/edit_credentials">
-                <button
-                    class="text-white text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
-                    Setup API KEYS</button>
-            </a>
-        </main>
-    </div>
+                        <div class="flex items-center justify-end gap-4 w-full">
+                            <label for="model">Select default model:</label>
+                            <select class="shadow-lg rounde-sm p-2" name="model" id="models" required>
+                                <% models.forEach((model)=> { %>
+                                    <option key="<%= model.id %>" value="<%=model.id %>" <% if (model.id==1)
+                                        {selected=true} %>>
+                                        <%= model.model_name %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
 
-</body>
+                        <div class="flex flex-col items-start justify-center gap-2 w-full">
+                            <label for="default_prompt">Default prompt:</label>
+                            <textarea class="border p-4 rounded-sm w-full min-h-[120px] resize" name="prompt"
+                                id="tweetContent" maxlength="280" required><%= user.default_prompt %></textarea>
+                        </div>
 
-</html>
+                        <button type="submit"
+                            class="text-white text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
+                            Save credentials</button>
+                    </div>
+                </form>
+
+                <a href="/api/edit_credentials">
+                    <button
+                        class="text-white text-nowrap text-center font-semibold shadow-md border rounded-sm bg-slate-800 hover:bg-slate-500 cursor-pointer px-4 py-2">
+                        Setup API KEYS</button>
+                </a>
+            </main>
+        </div>
+
+        </body>
+
+        </html>

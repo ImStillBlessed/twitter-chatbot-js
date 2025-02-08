@@ -2,6 +2,7 @@ import connection from '../utils/db.js';
 import { encrypt } from '../utils/utils.js';
 
 export const StoreKeys = async (req, res) => {
+    const session = req.user;
     try {
         const {
             twitter_api_key,
@@ -31,7 +32,7 @@ export const StoreKeys = async (req, res) => {
               twitter_access_secret = ?,
               twitter_bearer_token = ?,
               groq_api_key = ?
-          WHERE id = ?`;
+          WHERE email = ?`;
 
         const result = await new Promise((resolve, reject) => {
             connection.query(
@@ -43,7 +44,7 @@ export const StoreKeys = async (req, res) => {
                     encryptedKeys.twitter_access_secret,
                     encryptedKeys.twitter_bearer_token,
                     encryptedKeys.groq_api_key,
-                    1,
+                    session.email,
                 ],
                 (error, results) => {
                     if (error) {
@@ -62,11 +63,16 @@ export const StoreKeys = async (req, res) => {
 };
 
 export const Home = async (req, res) => {
+    const session = req.user;
     try {
         const user = await new Promise((resolve, reject) => {
             connection.query(
-                'SELECT users.*, ai_models.* FROM users LEFT JOIN ai_models ON users.ai_model = ai_models.id WHERE users.id = ? LIMIT 1',
-                [1],
+                `SELECT users.*, ai_models.* 
+                    FROM users 
+                    LEFT JOIN ai_models ON users.ai_model = ai_models.id 
+                    WHERE users.email = ? 
+                    LIMIT 1`,
+                [session.email],
                 (error, results) => {
                     if (error) {
                         return reject(error);
@@ -96,19 +102,30 @@ export const Home = async (req, res) => {
             );
         });
 
-        return res.render('index', { user, models });
+        const { successMessage, errorMessage } = req.session;
+        req.session.successMessage = null;
+        req.session.errorMessage = null;
+
+        return res.render('index', {
+            user,
+            models,
+            successMessage,
+            errorMessage,
+        });
     } catch (error) {
         console.error('Error getting user:', error);
+        req.session.errorMessage = 'Error getting user';
         return res.redirect('/setup');
     }
 };
 
 export const getKeys = async (req, res) => {
+    const session = req.user;
     try {
         const user = await new Promise((resolve, reject) => {
             connection.query(
-                'SELECT * FROM users WHERE id = ?',
-                [1],
+                'SELECT * FROM users WHERE email = ?',
+                [session.email],
                 (error, results) => {
                     if (error) {
                         return reject(error);
@@ -118,33 +135,49 @@ export const getKeys = async (req, res) => {
             );
         });
 
-        return res.render('edit_credentials', { user: user });
+        const { successMessage, errorMessage } = req.session;
+        req.session.successMessage = null;
+        req.session.errorMessage = null;
+
+        return res.render('edit_credentials', {
+            user: user,
+            successMessage,
+            errorMessage,
+        });
     } catch (error) {
         console.error('Error getting user:', error);
+        req.session.errorMessage = 'Error getting user';
         return res.redirect('/setup');
     }
 };
 
 export const editKey = async (req, res) => {
+    const session = req.user;
     const { name, value } = req.body;
     try {
         const encryptedValue = encrypt(value);
         const query = `
             UPDATE users
             SET ${name} = ?
-            WHERE id = ?`;
+            WHERE email = ?`;
 
         const result = await new Promise((resolve, reject) => {
-            connection.query(query, [encryptedValue, 1], (error, results) => {
-                if (error) {
-                    return reject(error);
+            connection.query(
+                query,
+                [encryptedValue, session.email],
+                (error, results) => {
+                    if (error) {
+                        return reject(error);
+                    }
+                    resolve(results);
                 }
-                resolve(results);
-            });
+            );
         });
+        req.session.successMessage = 'Key updated successfully';
         res.redirect('/api/edit_credentials');
     } catch (error) {
         console.error('Error editing key:', error);
+        req.session.errorMessage = 'Error editing key';
         return res.redirect('/api/edit_credentials');
     }
 };

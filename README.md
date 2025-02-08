@@ -105,7 +105,7 @@ This table stores user information and their API credentials.
 | `id`                 | INT(11)       | Primary Key, Auto-incrementing                                               |
 | `name`               | VARCHAR(256)  | User's name                                                               |
 | `password`           | TEXT          | User's password (should be hashed for security)                             |
-| `email`              | VARCHAR(256)  | User's email address                                                        |
+| `email`              | VARCHAR(256)  | User's email address (unique)                                                        |
 | `ai_model`           | INT(11)       | Foreign key referencing `ai_models.id`, ID of the user's selected AI model. Defaults to 0 |
 | `default_prompt`     | TEXT          | Default prompt for AI responses. Defaults to: "You are a helpful assistant responds to and create engaging tweets." |
 | `twitter_api_key`    | TEXT          | Encrypted Twitter API Key                                                  |
@@ -142,7 +142,7 @@ INSERT INTO ai_models (id, model_name) VALUES
 CREATE TABLE IF NOT EXISTS users (
   id int(11) NOT NULL,
   name varchar(256) NOT NULL,
-  email varchar(256) NOT NULL,
+  email varchar(256) NOT NULL UNIQUE,
   ai_model int(11) NOT NULL DEFAULT 0,
   default_prompt text NOT NULL DEFAULT 'You are a helpful assistant responds to and create engaging tweets.',
   twitter_api_key text DEFAULT NULL,
@@ -161,6 +161,8 @@ ALTER TABLE ai_models
   MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 ALTER TABLE users
   MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE users
+  ADD UNIQUE (email);
 COMMIT;
 ```
 

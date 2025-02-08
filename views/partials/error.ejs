@@ -1,0 +1,22 @@
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+    <% if (errorMessage != null) { %>
+        Toastify({
+            text: "<%= errorMessage %>",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+        }).showToast();
+            <% } %>
+
+                <% if (successMessage != null) { %>
+        Toastify({
+            text: "<%= successMessage %>",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+        }).showToast();
+                        <% } %>
+</script>

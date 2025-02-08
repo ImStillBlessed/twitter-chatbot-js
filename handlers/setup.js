@@ -1,6 +1,7 @@
 import connection from '../utils/db.js';
 
 export const setup = async (req, res) => {
+    const session = req.user;
     try {
         const models = await new Promise((resolve, reject) => {
             connection.query(
@@ -18,8 +19,8 @@ export const setup = async (req, res) => {
         // check if user already exists then update
         const user = await new Promise((resolve, reject) => {
             connection.query(
-                'SELECT * FROM users WHERE id = ? limit 1',
-                [1],
+                'SELECT * FROM users WHERE email = ? limit 1',
+                [session.email],
                 (error, results) => {
                     if (error) {
                         return reject(error);
@@ -33,7 +34,16 @@ export const setup = async (req, res) => {
             return res.render('setup', { models, user: null });
         }
 
-        return res.render('setup', { models, user: user[0] });
+        const { successMessage, errorMessage } = req.session;
+        req.session.successMessage = null;
+        req.session.errorMessage = null;
+
+        return res.render('setup', {
+            models,
+            user: user[0],
+            successMessage,
+            errorMessage,
+        });
     } catch (error) {
         console.error('Error getting user:', error);
         return res.status(500).json({ message: 'Error getting user' });
@@ -41,13 +51,13 @@ export const setup = async (req, res) => {
 };
 
 export const saveSetup = async (req, res) => {
-    const { model, name, email, prompt } = req.body;
+    const session = req.user;
+    const { model, name, prompt } = req.body;
     try {
-        // check if user already exists then update
-        const user = await new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             connection.query(
-                'SELECT * FROM users WHERE id = ?',
-                [1],
+                'UPDATE users SET name = ?, ai_model = ?, default_prompt = ? WHERE email = ?',
+                [name, model, prompt, session.email],
                 (error, results) => {
                     if (error) {
                         return reject(error);
@@ -56,37 +66,11 @@ export const saveSetup = async (req, res) => {
                 }
             );
         });
-
-        if (user.length === 0) {
-            await new Promise((resolve, reject) => {
-                connection.query(
-                    'INSERT INTO users (id, name, email, ai_model, default_prompt) VALUES (?, ?, ?, ?, ?)',
-                    [1, name, email, model, prompt],
-                    (error, results) => {
-                        if (error) {
-                            return reject(error);
-                        }
-                        resolve(results);
-                    }
-                );
-            });
-        } else {
-            await new Promise((resolve, reject) => {
-                connection.query(
-                    'UPDATE users SET name = ?, email = ?, ai_model = ?, default_prompt = ? WHERE id = ?',
-                    [name, email, model, prompt, 1],
-                    (error, results) => {
-                        if (error) {
-                            return reject(error);
-                        }
-                        resolve(results);
-                    }
-                );
-            });
-        }
-        return res.redirect('/api/setup');
+        req.session.successMessage = 'Setup saved successfully';
+        return res.redirect('/api/edit_credentials');
     } catch (error) {
         console.error('Error setting model:', error);
+        req.session.errorMessage = 'Error setting model';
         return res.redirect('/setup');
     }
 };

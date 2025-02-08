@@ -12,13 +12,19 @@ export const getTweet = async (req, res) => {
     //     // return res.status(400).send('Missing keywords');
     // }
 
+    const session = req.user;
+
     const keywords = ['groq', 'sanity', 'react', 'javascript', 'is', 'the'];
     // Query the database
     const userID = 1;
     const user = await new Promise((resolve, reject) => {
         connection.query(
-            'SELECT users.*, ai_models.* FROM users LEFT JOIN ai_models ON users.ai_model = ai_models.id WHERE users.id = ? LIMIT 1',
-            [userID],
+            `SELECT users.*, ai_models.* 
+                    FROM users 
+                    LEFT JOIN ai_models ON users.ai_model = ai_models.id 
+                    WHERE users.email = ? 
+                    LIMIT 1`,
+            [session.email],
             (error, results) => {
                 if (error) {
                     return reject(error);
@@ -42,7 +48,11 @@ export const TestAi = async (req, res) => {
         // get the first user
         const user = await new Promise((resolve, reject) => {
             connection.query(
-                'SELECT users.*, ai_models.* FROM users LEFT JOIN ai_models ON users.ai_model = ai_models.id LIMIT 1',
+                `SELECT users.*, ai_models.* 
+                    FROM users 
+                    LEFT JOIN ai_models ON users.ai_model = ai_models.id 
+                    WHERE users.email = ? 
+                    LIMIT 1`,
                 (error, results) => {
                     if (error) {
                         return reject(error);
